@@ -21,11 +21,7 @@ if (!isset($_SESSION["user"]))
 
 
 <?php
-  $email = $_SESSION["email"];
   $_SESSION["student"] = $_GET['student_ID'];
-  $subject_ID = $_SESSION["subject"];
-  $date = date("Y/m/d");
-  require_once "../scripts/database.php";
 ?>
 <form action="../scripts/grade_script.php" method="post">
         <div class="input-group mb-3">
