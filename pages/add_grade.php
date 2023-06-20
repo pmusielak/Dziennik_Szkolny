@@ -22,31 +22,14 @@ if (!isset($_SESSION["user"]))
 
 <?php
   $email = $_SESSION["email"];
-  $student_ID = $_GET['student_ID'];
-  echo  $student_ID;
+  $_SESSION["student"] = $_GET['student_ID'];
   $subject_ID = $_SESSION["subject"];
   $date = date("Y/m/d");
   require_once "../scripts/database.php";
-  if (isset($_POST["submit"]))
-  {
-    $grade = $_POST["Grade"];
-    $sql = "INSERT INTO grade (student_ID, subject_ID, grade, date) VALUES (?, ?, ?, ?)";
-    $stmt = mysqli_stmt_init($conn);
-    $prepareSTMT = mysqli_stmt_prepare($stmt, $sql);
-    if ($prepareSTMT)
-    {
-      mysqli_stmt_bind_param($stmt, "iiis", $student_ID, $subject_ID, $grade, $date);
-      mysqli_stmt_execute($stmt);
-    }
-    else
-        {
-            die("Something went wrong");
-        }
-  }
 ?>
-<form action="add_grade.php" method="post">
+<form action="../scripts/grade_script.php" method="post">
         <div class="input-group mb-3">
-          <input type="int" class="form-control" name="Grade" placeholder="New Grade">
+          <input type="number" class="form-control" name="Grade" placeholder="New Grade" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -58,6 +41,9 @@ if (!isset($_SESSION["user"]))
           </div>
 <div class="container">
         <a href="../scripts/logout.php" class="btn btn-warning">Logout</a>
+    </div>
+<div class="container">
+        <a href="class_grades.php" class="btn btn-warning">Go Back</a>
     </div>
 </body>
 </html>

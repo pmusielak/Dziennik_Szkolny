@@ -23,12 +23,23 @@ if (!isset($_SESSION["user"]))
     <th>Name</th>
     <th>Surname</th>
     <th>Grades</th>
+    <th>Action</th>
   </tr>
 
 <?php
   $email = $_SESSION["email"];
-  $subject_ID = $_GET['subject_ID'];
-  $_SESSION["subject"] = $subject_ID;
+  if(!isset($_SESSION["subject"]))
+  {
+    $subject_ID = $_GET['subject_ID'];
+    $_SESSION["subject"] = $subject_ID;
+  }
+  if(isset($_SESSION["error"]))
+  {
+    $error = $_SESSION["error"];
+    $_SESSION["error"] = null;
+    echo $error;
+  }
+  $subject_ID = $_SESSION["subject"];
   require_once "../scripts/database.php";
   $sql = "SELECT * FROM subject s RIGHT JOIN class c on s.class_ID=c.class_ID RIGHT JOIN student s2 on c.class_ID=s2.class_ID WHERE s.subject_ID='$subject_ID';";
   $result = $conn->query($sql);
@@ -41,12 +52,11 @@ if (!isset($_SESSION["user"]))
     echo '<td>' . $user['surname'] . '</td>';
     echo  '<td>';
     while($grade = $result2->fetch_assoc()){
-          echo $grade['grade'];
+          echo "<a href='edit_grade.php?grade_ID=" .$grade['grade_ID']. "'>" . "$grade[grade]" . '</a>';
           echo '<p>'."   ".'</p>';
     }
     echo '</td>';
     echo "<td><a href='add_grade.php?student_ID=" . $user['student_ID'] . "'>" . "Add Grade" . '</a></td>';
-    echo '<td>' . $user['student_ID'] . '</td>';
     echo '</tr>';
   }
   echo "</table>";
