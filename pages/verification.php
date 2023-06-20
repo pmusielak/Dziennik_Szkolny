@@ -12,12 +12,12 @@
     <div class="container">
         <?php
         session_start();
-        $email = $_SESSION['email'];
+        $email = $_SESSION['emailv'];
         require_once "../scripts/database.php";
         $sql = "SELECT * FROM verification WHERE email = '$email'";
         $result = mysqli_query($conn, $sql);
         $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
-        $role = $_SESSION['role'];
+        $role = $_SESSION['rolev'];
         if (isset($_POST["verify"])) {
            $code = $_POST["code"];
             
@@ -30,7 +30,6 @@
                         $sql = "UPDATE teacher SET email_verification='true' WHERE email = '$email'";
                     }
                     if(mysqli_query($conn, $sql)){
-                        session_destroy();
                         header("Location: login.php");
                         die();
                     }

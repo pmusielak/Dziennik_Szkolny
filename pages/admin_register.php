@@ -25,23 +25,15 @@
       <?php
       if (isset($_POST["submit"]))
       {
-        $name = $_POST["firstName"];
-        $surname = $_POST["lastName"];
         $email = $_POST["email"];
-        $phone = $_POST["phone"];
         $password = $_POST["password"];
         $confirm_password = $_POST["password2"];
-        $role = $_POST["role"];
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
         $errors = array();
 
-        if (empty($name) OR empty($surname) OR empty($email) OR empty($phone) OR empty($password) OR empty($confirm_password))
+        if (empty($email) OR empty($password) OR empty($confirm_password))
         {
           array_push($errors, "All fields are required");
-        }
-        if ($role!="student" && $role!="teacher")
-        {
-          array_push($errors, "You must choose student or teacher role");
         }
         if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         {
@@ -51,24 +43,17 @@
         {
           array_push($errors, "Password must be at least 8 characters long");
         }
-        if (strlen($phone)!=9)
-        {
-          array_push($errors, "Your phone number must be 9 characters long");
-        }
         if ($password != $confirm_password)
         {
           array_push($errors, "Password does not match");
         }
         require_once "../scripts/database.php";
-        $sql = "SELECT * FROM teacher WHERE email = '$email'";
+        $sql = "SELECT * FROM admin WHERE email = '$email'";
         $result = mysqli_query($conn, $sql);
         $rowCount = mysqli_num_rows($result);
-        $sql = "SELECT * FROM student WHERE email = '$email'";
-        $result2 = mysqli_query($conn, $sql);
-        $rowCount2 = mysqli_num_rows($result2);
-        if ($rowCount>0 || $rowCount2>0)
+        if ($rowCount>0)
         {
-          array_push($errors, "Account with this email already exists");
+          array_push($errors, "Admin with this email already exists");
         }
 
         if (count($errors)>0)
@@ -80,18 +65,12 @@
         }
         else
         {
-          if($role=="teacher"){
-            $sql = "INSERT INTO teacher (first_Name, surname, email, phone, password) VALUES (?, ?, ?, ?, ?)";
-          }
-          else if($role=="student"){
-            $sql = "INSERT INTO student (name, surname, email, phone, password) VALUES (?, ?, ?, ?, ?)";
-          }
-          
+            $sql = "INSERT INTO admin (email, password) VALUES (?, ?)";
           $stmt = mysqli_stmt_init($conn);
           $prepareSTMT = mysqli_stmt_prepare($stmt, $sql);
           if ($prepareSTMT)
           {
-            mysqli_stmt_bind_param($stmt, "sssis", $name, $surname, $email, $phone, $password_hash);
+            mysqli_stmt_bind_param($stmt, "ss",$email, $password_hash);
             mysqli_stmt_execute($stmt);
           }
           else
@@ -125,36 +104,12 @@
 
       ?>
 
-      <form action="register.php" method="post">
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Podaj Imię" name="firstName">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Podaj Nazwisko" name="lastName">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
-            </div>
-          </div>
-        </div>
+      <form action="admin_register.php" method="post">
         <div class="input-group mb-3">
           <input type="email" class="form-control" placeholder="Podaj email" name="email">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="tel" class="form-control" placeholder="Podaj nr telefonu" name="phone">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fa fa-phone"></span>
             </div>
           </div>
         </div>
@@ -174,20 +129,6 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-7">
-            <div class="icheck-primary">
-              <input type="checkbox" id="agreeTerms" name="terms" value="agree">
-              <label for="agreeTerms">
-               I agree to the <a href="#">terms</a>
-              </label>
-            </div>
-          </div>
-          <select name="role">
-              <option value="">Select...</option>
-              <option value="teacher">Teacher</option>
-              <option value="student">Student</option>
-        </select>
           <!-- /.col -->
           <div class="col-5">
             <button type="submit" name="submit" class="btn btn-primary btn-block">Rejestracja</button>
@@ -198,7 +139,6 @@
 
 
 
-      <a href="login.php" class="text-center">I already have an account</a>
     </div>
     <!-- /.form-box -->
   </div><!-- /.card -->

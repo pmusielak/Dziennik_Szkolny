@@ -1,3 +1,24 @@
+<?php
+session_start();
+if(isset($_SESSION["user"]))
+{
+  if($_SESSION["role"]==1)
+  {
+    header("Location: admin_index.php");
+    die();
+  }
+  if($_SESSION["role"]==2)
+  {
+    header("Location: teacher_index.php");
+    die();
+  }
+  if($_SESSION["role"]==3)
+  {
+    header("Location: student_index.php");
+    die();
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,7 +79,27 @@
             session_start();
             $_SESSION["user"] = "yes";
             $_SESSION["role"] = 3;
+            $_SESSION["email"] = $email;
             header("Location: student_index.php");
+            die();
+          }
+        }
+        else
+        {
+          echo "<div class='alert alert-danger'>Email or password are incorrect.</div>";
+        }
+        $sql = "SELECT * FROM admin WHERE email = '$email'";
+        $result = mysqli_query($conn, $sql);
+        $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        if ($user)
+        {
+          if (password_verify($password, $user["password"]))
+          {
+            session_start();
+            $_SESSION["user"] = "yes";
+            $_SESSION["role"] = 1;
+            $_SESSION["email"] = $email;
+            header("Location: admin_index.php");
             die();
           }
         }
