@@ -45,13 +45,17 @@ if (!isset($_SESSION["user"]))
           echo '<p>'."   ".'</p>';
     }
     echo '</td>';
-    echo '<td>' . "Add Grade" . '</td>';
+    echo "<td><a href='add_grade.php?student_ID=" . $user['student_ID'] . "'>" . "Add Grade" . '</a></td>';
+    echo '<td>' . $user['student_ID'] . '</td>';
     echo '</tr>';
   }
   echo "</table>";
 ?>
 <div class="container">
         <a href="../scripts/logout.php" class="btn btn-warning">Logout</a>
+    </div>
+<div class="container">
+        <a href="teacher_index.php" class="btn btn-warning">Go Back</a>
     </div>
 </body>
 </html>
