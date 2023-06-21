@@ -23,7 +23,7 @@ if (!isset($_SESSION["user"]))
 <?php
   $_SESSION["student"] = $_GET['student_ID'];
 ?>
-<form action="../scripts/grade_script.php" method="post">
+<form action="../scripts/grade_add_script.php" method="post">
         <div class="input-group mb-3">
           <input type="number" class="form-control" name="Grade" placeholder="New Grade" required>
           <div class="input-group-append">

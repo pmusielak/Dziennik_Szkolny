@@ -25,6 +25,7 @@ if (!isset($_SESSION["user"]))
   </tr>
 
 <?php
+  $_SESSION["subject"] = null;
   $email = $_SESSION["email"];
   require_once "../scripts/database.php";
   $sql = "SELECT * FROM teacher t RIGHT JOIN subject s on t.teacher_ID=s.teacher_ID RIGHT JOIN class c on c.class_ID=s.class_ID WHERE t.email='$email';";
