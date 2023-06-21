@@ -15,8 +15,25 @@ if ($prepareSTMT)
 {
     mysqli_stmt_bind_param($stmt, "iiis", $_SESSION["student"], $_SESSION["subject"], $grade, $date);
     mysqli_stmt_execute($stmt);
-    header("Location: ../pages/class_grades.php");
-    die();
+    $sql = "SELECT MAX(grade_ID) FROM grade;";
+    $result = $conn->query($sql);
+    while($gradeid = $result->fetch_assoc()){
+        $grade_ID = $gradeid['MAX(grade_ID)'];
+    }
+    $sql = "INSERT INTO grade_history (grade_ID, new_grade, date) VALUES ( ?, ?, ?)";
+    $stmt = mysqli_stmt_init($conn);
+    $prepareSTMT = mysqli_stmt_prepare($stmt, $sql);
+    if ($prepareSTMT)
+    {
+        mysqli_stmt_bind_param($stmt, "iss", $grade_ID, $grade, $date);
+        mysqli_stmt_execute($stmt);
+        header("Location: ../pages/class_grades.php");
+        die();
+    }
+    else
+    {
+        die("Something went wrong");
+    }
 }
 else
     {
