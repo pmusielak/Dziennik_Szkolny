@@ -49,5 +49,8 @@ if (!isset($_SESSION["user"]))
 <div class="container">
         <a href="../scripts/logout.php" class="btn btn-warning">Logout</a>
     </div>
+<div class="container">
+    <a href="grade_history_student.php" class="btn btn-warning">Grade History</a>
+</div>
 </body>
 </html>

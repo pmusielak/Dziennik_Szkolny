@@ -20,21 +20,24 @@ if (!isset($_SESSION["user"]))
 <h4>School Gradebook</h4>
 <table>
   <tr>
-    <th>Subject</th>
-    <th>Class</th>
+    <th>Grade_ID</th>
+    <th>Previous_Grade</th>
+    <th>New_Grade</th>
+    <th>Date</th>
   </tr>
 
 <?php
-  $_SESSION["subject"] = null;
   $email = $_SESSION["email"];
   require_once "../scripts/database.php";
-  $sql = "SELECT * FROM teacher t RIGHT JOIN subject s on t.teacher_ID=s.teacher_ID RIGHT JOIN class c on c.class_ID=s.class_ID WHERE t.email='$email';";
+  $sql = "SELECT * FROM teacher t RIGHT JOIN subject s on t.teacher_ID=s.teacher_ID RIGHT JOIN grade g on g.subject_ID=s.subject_ID RIGHT JOIN grade_history gh on gh.grade_ID=g.grade_ID WHERE t.email='$email';";
   $result = $conn->query($sql);
   while($user = $result->fetch_assoc()){
     echo <<< TABLEUSERS
       <tr>
-        <td>$user[subject_Name]</td>
-        <td><a href='class_grades.php?subject_ID=$user[subject_ID]'>$user[class_Name]</a></td>
+        <td>$user[grade_ID]</td>
+        <td>$user[previous_grade]</td>
+        <td>$user[new_grade]</td>
+        <td>$user[date]</td>
       </tr>
       
 TABLEUSERS;
@@ -44,8 +47,8 @@ TABLEUSERS;
 <div class="container">
         <a href="../scripts/logout.php" class="btn btn-warning">Logout</a>
     </div>
-    <div class="container">
-        <a href="grade_history_teacher.php" class="btn btn-warning">Grade History</a>
-    </div>
+<div class="container">
+    <a href="teacher_index.php" class="btn btn-warning">Go Back</a>
+</div>
 </body>
 </html>
